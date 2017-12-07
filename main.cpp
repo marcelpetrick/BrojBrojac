@@ -8,11 +8,15 @@
 // 234 - 3 times
 // 345 - 2 times
 
+//--------------------------------------------------------------------------
 
+// include list
 #include <QCoreApplication>
 #include <QMap>
 #include <QDebug>
 #include <QStringRef> //for substring
+
+//--------------------------------------------------------------------------
 
 // thoughts about how to report back the amount?
 // a: use a vector, where the number is also the index. then, since there will be 1000 possible numbers [0..999]
@@ -23,25 +27,38 @@
 QMap<QString, int> countTriplets(QString const inputString)
 {
     qDebug() << __FUNCTION__;
+    qDebug() << "inputString:" << inputString;
 
     QMap<QString, int> returnValue;
 
     int const tokenLength(3); //maybe make configure-able
 
     // tokenize the whole string; add each one to the map by increasing the returned count from "before"
-    for(int index = 0; index < (inputString.length()); index++)
+    for(int index = 0; index < (inputString.length() - tokenLength); index++)
     {
         // create substring
-        QStringRef subString(inputString, index, tokenLength);
+        QString const subString = inputString.mid(index, tokenLength);
         // find amount
         int const count = returnValue.value(subString);
         //increase by one and push-back
-        qDebug() << "substring:" << subString << "-->" << count;
+        //qDebug() << "substring:" << subString << "-->" << count; //just for debugging
         returnValue.insert(subString, count + 1);
     }
 
     return returnValue;
 }
+
+//--------------------------------------------------------------------------
+
+void printResult(QMap<QString, int> inputMap)
+{
+    for(auto const elem : inputMap.keys())
+    {
+        qDebug() << elem << ":" << inputMap.value(elem);
+    }
+}
+
+//--------------------------------------------------------------------------
 
 int main(int argc, char *argv[])
 {
@@ -51,8 +68,9 @@ int main(int argc, char *argv[])
     QString const inputString("123412345123456");
     qDebug() << "#### begin ####";
 
-    countTriplets(inputString);
+    QMap<QString, int> const numberMap = countTriplets(inputString);
 
+    printResult(numberMap);
 
     qDebug() << "#### end ####";
 
